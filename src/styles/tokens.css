@@ -1,0 +1,27 @@
+:root {
+  /* palette — Forest & Cream */
+  --cream:  #F4EFE4;
+  --wheat:  #DCD3BE;
+  --forest: #2C4A33;
+  --forest-deep: #20351F;
+  --gold:   #C9A871;
+  --ink:    #22281F;
+  --cream-dim: rgba(246, 241, 230, .82);
+
+  /* type */
+  --serif: 'Cormorant Garamond', Georgia, serif;
+  --sans:  'Inter', system-ui, sans-serif;
+
+  /* fluid scale */
+  --h1: clamp(2.6rem, 7vw, 5.5rem);
+  --h2: clamp(2rem, 4.5vw, 3.4rem);
+  --h3: clamp(1.4rem, 2.6vw, 1.9rem);
+  --label: .72rem;
+  --eyebrow-ls: .3em;
+
+  /* spacing */
+  --section-y: clamp(4rem, 9vw, 8rem);
+  --gutter: clamp(1.25rem, 5vw, 4rem);
+  --radius: 14px;
+  --maxw: 1240px;
+}

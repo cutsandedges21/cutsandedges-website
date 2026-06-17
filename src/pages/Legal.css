@@ -1,0 +1,3 @@
+.legal { max-width: 760px; padding-top: clamp(8rem, 16vw, 11rem); }
+.legal h1 { margin-bottom: 2rem; }
+.legal p { margin-bottom: 1.3rem; max-width: 68ch; opacity: .9; }

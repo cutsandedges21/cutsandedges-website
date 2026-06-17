@@ -1,0 +1,73 @@
+*, *::before, *::after { box-sizing: border-box; }
+html, body, #root { margin: 0; min-height: 100%; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: var(--sans);
+  background: var(--cream);
+  color: var(--ink);
+  -webkit-font-smoothing: antialiased;
+  line-height: 1.6;
+}
+img, video { max-width: 100%; display: block; }
+a { color: inherit; text-decoration: none; }
+h1, h2, h3 { font-family: var(--serif); font-weight: 500; line-height: 1.02; margin: 0; }
+h1 { font-size: var(--h1); }
+h2 { font-size: var(--h2); }
+h3 { font-size: var(--h3); }
+em { font-style: italic; }
+
+.container { max-width: var(--maxw); margin: 0 auto; padding-inline: var(--gutter); }
+.section { padding-block: var(--section-y); }
+.eyebrow { font-size: var(--label); letter-spacing: var(--eyebrow-ls); text-transform: uppercase; }
+.section--dark { background: var(--forest); color: var(--cream); }
+.section--wheat { background: var(--wheat); }
+
+/* ── reveal-on-scroll ── */
+.reveal { opacity: 0; transform: translateY(22px); transition: opacity .7s ease, transform .7s ease; }
+.reveal.is-shown { opacity: 1; transform: none; }
+
+/* ── numbered section label ── */
+.section-label { display: inline-flex; gap: .8rem; align-items: baseline; color: var(--gold); }
+.section-label b { font-family: var(--serif); font-size: 1.1rem; font-weight: 600; }
+.section-label span { color: inherit; opacity: .85; }
+
+/* ── buttons & links ── */
+.pill { display: inline-block; font-size: var(--label); letter-spacing: .2em; text-transform: uppercase;
+  border-radius: 999px; padding: .85rem 1.6rem; cursor: pointer; border: 1px solid transparent; transition: .2s; }
+.pill--solid { background: var(--gold); color: var(--ink); font-weight: 600; }
+.pill--solid:hover { filter: brightness(1.05); }
+.pill--ghost { background: transparent; border-color: currentColor; }
+.pill--ghost:hover { background: rgba(201, 168, 113, .12); }
+.link-underline { font-size: var(--label); letter-spacing: .22em; text-transform: uppercase;
+  border-bottom: 1px solid currentColor; padding-bottom: 5px; display: inline-block; transition: opacity .2s; }
+.link-underline:hover { opacity: .7; }
+
+/* ── page intro paragraph (below short page heroes) ── */
+.page-intro { font-family: var(--serif); font-size: clamp(1.4rem, 3vw, 2rem); line-height: 1.4; max-width: 28ch; }
+
+/* ── CTA band ── */
+.cta-band { padding-block: var(--section-y); }
+.cta-band__inner { text-align: center; display: grid; gap: 1.2rem; place-items: center; }
+.cta-band__inner p { max-width: 46ch; opacity: .85; }
+
+/* ── service preview list ── */
+.service-list__row { display: grid; grid-template-columns: auto 1fr; gap: .4rem 1.5rem;
+  padding: 1.8rem 0; border-top: 1px solid rgba(34, 40, 31, .14); align-items: baseline; }
+.service-list__num { font-family: var(--serif); color: var(--gold); font-size: 1.2rem; }
+.service-list__row p { grid-column: 2; opacity: .8; }
+
+/* ── testimonials ── */
+.testimonials { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 2rem; }
+.testimonial__quote { font-family: var(--serif); font-size: 1.25rem; line-height: 1.4; }
+.testimonial__name { font-weight: 600; margin-top: 1rem; margin-bottom: 0; }
+.testimonial__meta { font-size: var(--label); letter-spacing: .1em; text-transform: uppercase; opacity: .6; margin-top: .2rem; }
+
+/* ── instagram strip ── */
+.insta__tiles { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-bottom: 1.5rem; }
+.insta__tile { aspect-ratio: 1; background: var(--wheat); border-radius: 8px; }
+@media (max-width: 600px) { .insta__tiles { grid-template-columns: repeat(2, 1fr); } }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}

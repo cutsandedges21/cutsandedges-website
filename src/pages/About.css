@@ -1,0 +1,20 @@
+.about-story { display: grid; grid-template-columns: 2fr 1fr; gap: 3rem; align-items: start; }
+.about-story__text p { max-width: 60ch; margin-bottom: 1.2rem; font-size: 1.05rem; }
+.about-stat { text-align: right; }
+.about-stat__num { font-family: var(--serif); font-size: clamp(3rem, 8vw, 6rem); color: var(--forest); display: block; line-height: 1; }
+.about-stat__label { font-size: var(--label); letter-spacing: .2em; text-transform: uppercase; opacity: .7; }
+
+.about-trust { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem; margin-top: 2rem; }
+.about-trust__item { padding: 1.6rem 1.2rem; background: var(--cream); border-radius: var(--radius); text-align: center;
+  font-family: var(--serif); font-size: 1.3rem; }
+
+.about-h2 { margin: 1rem 0 1.5rem; }
+.about-area__list { display: flex; flex-wrap: wrap; gap: 1rem; margin-top: 1.5rem; font-family: var(--serif); font-size: clamp(1.3rem, 3vw, 1.8rem); }
+.about-area__list span:not(:last-child)::after { content: ' ·'; color: var(--gold); margin-left: 1rem; }
+.about-cta { text-align: center; }
+
+@media (max-width: 760px) {
+  .about-story { grid-template-columns: 1fr; }
+  .about-stat { text-align: left; }
+  .about-trust { grid-template-columns: 1fr 1fr; }
+}

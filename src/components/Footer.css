@@ -1,0 +1,16 @@
+.footer { padding-block: clamp(3rem, 7vw, 5rem) 2rem; }
+.footer__grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1.4fr; gap: 2rem; }
+.footer__brand { font-family: var(--serif); font-size: 1.7rem; font-weight: 600; }
+.footer__tagline { max-width: 34ch; opacity: .8; font-size: .95rem; }
+.footer__socials { display: flex; gap: 1.2rem; margin-top: 1rem; font-size: var(--label); letter-spacing: .14em; text-transform: uppercase; }
+.footer__socials a:hover { color: var(--gold); }
+.footer__h { font-size: var(--label); letter-spacing: .2em; text-transform: uppercase; color: var(--gold); margin-bottom: 1rem; }
+.footer__grid a, .footer__area { display: block; opacity: .85; margin-bottom: .5rem; font-size: .95rem; }
+.footer__grid a:hover { opacity: 1; }
+.footer__bottom { display: flex; justify-content: space-between; gap: 1rem; margin-top: 2.5rem;
+  padding-top: 1.5rem; border-top: 1px solid rgba(246, 241, 230, .18); font-size: .8rem; opacity: .7; }
+.footer__legal a:hover { color: var(--gold); }
+@media (max-width: 760px) {
+  .footer__grid { grid-template-columns: 1fr 1fr; }
+  .footer__bottom { flex-direction: column; }
+}

@@ -1,0 +1,9 @@
+.home__statement { font-size: var(--h2); max-width: 24ch; }
+.home__h2 { margin-top: 1rem; margin-bottom: 1.5rem; }
+.home__more { margin-top: 2rem; }
+.home__about { display: flex; justify-content: space-between; align-items: center; gap: 2rem; flex-wrap: wrap; }
+.home__about .pill { margin-top: 1.5rem; }
+.home__stat { text-align: right; }
+.home__statnum { font-family: var(--serif); font-size: clamp(3rem, 8vw, 6rem); color: var(--forest); display: block; line-height: 1; }
+.home__statlabel { font-size: var(--label); letter-spacing: .2em; text-transform: uppercase; opacity: .7; }
+@media (max-width: 600px) { .home__stat { text-align: left; } }
