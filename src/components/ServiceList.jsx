@@ -7,7 +7,7 @@ export default function ServiceList() {
   return (
     <div className="service-list">
       {SERVICES.map((s, i) => (
-        <Reveal key={s.id} className="service-list__row">
+        <Reveal key={s.id} className="service-list__row" delay={i * 0.08}>
           <span className="service-list__num">{String(i + 1).padStart(2, '0')}</span>
           <h3>{s[lang].name}</h3>
           <p>{s[lang].desc}</p>

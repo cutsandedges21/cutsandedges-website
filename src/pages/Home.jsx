@@ -1,5 +1,5 @@
 import { useLang } from '../i18n/LanguageContext.jsx'
-import Hero from '../components/Hero.jsx'
+import HomeHero from '../components/HomeHero.jsx'
 import Reveal from '../components/Reveal.jsx'
 import SectionLabel from '../components/SectionLabel.jsx'
 import PillButton from '../components/PillButton.jsx'
@@ -13,13 +13,7 @@ export default function Home() {
   const { t } = useLang()
   return (
     <>
-      <Hero
-        video="/videos/luxury-drone.mp4"
-        poster="/videos/luxury-drone-poster.jpg"
-        eyebrow={t.hero.eyebrow}
-        title={<>{t.hero.titleA}<br /><em>{t.hero.titleB}</em></>}
-        cta={{ label: t.hero.cta, to: '/contact' }}
-      />
+      <HomeHero />
 
       <section className="section container">
         <Reveal as="h2" className="home__statement">{t.home.positioning}</Reveal>

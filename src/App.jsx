@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { LanguageProvider } from './i18n/LanguageContext.jsx'
+import { LenisProvider } from './smooth/LenisProvider.jsx'
 import Layout from './components/Layout.jsx'
 import Home from './pages/Home.jsx'
 import Services from './pages/Services.jsx'
@@ -12,6 +13,7 @@ import Terms from './pages/Terms.jsx'
 export default function App() {
   return (
     <LanguageProvider>
+      <LenisProvider>
       <BrowserRouter>
         <Routes>
           <Route element={<Layout />}>
@@ -25,6 +27,7 @@ export default function App() {
           </Route>
         </Routes>
       </BrowserRouter>
+      </LenisProvider>
     </LanguageProvider>
   )
 }

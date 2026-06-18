@@ -30,7 +30,7 @@ export default function About() {
         <div className="section container">
           <SectionLabel index="02">{t.about.trustTitle}</SectionLabel>
           <div className="about-trust">
-            {TRUST.map(x => <Reveal key={x.en} className="about-trust__item">{x[lang]}</Reveal>)}
+            {TRUST.map((x, i) => <Reveal key={x.en} className="about-trust__item" delay={i * 0.08}>{x[lang]}</Reveal>)}
           </div>
         </div>
       </section>

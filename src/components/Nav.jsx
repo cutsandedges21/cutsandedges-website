@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Link, NavLink } from 'react-router-dom'
+import { Link, NavLink, useLocation } from 'react-router-dom'
 import { useLang } from '../i18n/LanguageContext.jsx'
 import './Nav.css'
 
@@ -7,13 +7,23 @@ const links = ['services', 'gallery', 'about', 'contact']
 
 export default function Nav() {
   const { t, lang, toggle } = useLang()
+  const { pathname } = useLocation()
+  const isHome = pathname === '/'
+  const reduce = typeof window !== 'undefined' &&
+    window.matchMedia('(prefers-reduced-motion: reduce)').matches
   const [scrolled, setScrolled] = useState(false)
   const [open, setOpen] = useState(false)
+  // On the home page the C&E intro collapses INTO the logo, so the wordmark stays
+  // hidden until the letters have nearly finished arriving.
+  const [hideBrand, setHideBrand] = useState(isHome && !reduce)
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 40)
-    onScroll(); window.addEventListener('scroll', onScroll)
+    const onScroll = () => {
+      setScrolled(window.scrollY > 40)
+      setHideBrand(isHome && !reduce && window.scrollY < window.innerHeight * 0.72)
+    }
+    onScroll(); window.addEventListener('scroll', onScroll, { passive: true })
     return () => window.removeEventListener('scroll', onScroll)
-  }, [])
+  }, [isHome, reduce])
 
   return (
     <header className={`nav ${scrolled ? 'nav--scrolled' : ''} ${open ? 'nav--open' : ''}`}>
@@ -21,7 +31,7 @@ export default function Nav() {
         <div className="nav__links nav__links--left">
           {links.map(k => <NavLink key={k} to={`/${k}`} className="nav__link">{t.nav[k]}</NavLink>)}
         </div>
-        <Link to="/" className="nav__brand" onClick={() => setOpen(false)}>Cuts &amp; Edges</Link>
+        <Link to="/" className={`nav__brand ${hideBrand && !open ? 'nav__brand--hidden' : ''}`} onClick={() => setOpen(false)}>Cuts &amp; Edges</Link>
         <div className="nav__right">
           <button className="nav__lang" onClick={toggle} aria-label="Toggle language">
             <span className={lang === 'en' ? 'on' : ''}>EN</span> · <span className={lang === 'fr' ? 'on' : ''}>FR</span>

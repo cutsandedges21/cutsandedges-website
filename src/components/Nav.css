@@ -4,7 +4,8 @@
 .nav__links--left { display: flex; gap: 1.6rem; }
 .nav__link { font-size: var(--label); letter-spacing: .18em; text-transform: uppercase; opacity: .9; transition: opacity .2s; }
 .nav__link:hover, .nav__link.active { opacity: 1; color: var(--gold); }
-.nav__brand { grid-column: 2; font-family: var(--serif); font-weight: 600; font-size: 1.5rem; letter-spacing: .04em; text-align: center; white-space: nowrap; }
+.nav__brand { grid-column: 2; font-family: var(--serif); font-weight: 600; font-size: 1.5rem; letter-spacing: .04em; text-align: center; white-space: nowrap; transition: opacity .5s ease; }
+.nav__brand--hidden { opacity: 0; pointer-events: none; }
 .nav__right { justify-self: end; display: flex; align-items: center; gap: 1rem; }
 .nav__lang { background: none; border: 0; color: inherit; font: inherit; font-size: var(--label); letter-spacing: .14em; cursor: pointer; }
 .nav__lang .on { color: var(--gold); }
