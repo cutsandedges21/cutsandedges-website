@@ -4,8 +4,19 @@
 .nav__links--left { display: flex; gap: 1.6rem; }
 .nav__link { font-size: var(--label); letter-spacing: .18em; text-transform: uppercase; opacity: .9; transition: opacity .2s; }
 .nav__link:hover, .nav__link.active { opacity: 1; color: var(--gold); }
-.nav__brand { grid-column: 2; font-family: var(--serif); font-weight: 600; font-size: 1.5rem; letter-spacing: .04em; text-align: center; white-space: nowrap; transition: opacity .5s ease; }
-.nav__brand--hidden { opacity: 0; pointer-events: none; }
+.nav__brand { grid-column: 2; font-family: var(--serif); font-weight: 600; font-size: 1.5rem; letter-spacing: .04em; text-align: center; white-space: nowrap; }
+/* single element: blown up & centred over the hero, then collapsed into this
+   slot by a scroll-driven transform (set inline from Nav.jsx) */
+.nav__brand--morph { transform-origin: 50% 50%; will-change: transform; }
+.nav__brand-sep { color: var(--gold); margin: 0 .16em; }
+/* "uts" / "dges" stay clipped so the wordmark reads "C & E", then reveal out
+   from the initials into "Cuts & Edges" when the bar gets the --full class */
+.nav__brand-rest {
+  display: inline-block; overflow: hidden; white-space: nowrap;
+  max-width: 0; opacity: 0; vertical-align: bottom;
+  transition: max-width 1.1s cubic-bezier(.2, .7, .2, 1), opacity .8s ease;
+}
+.nav__brand--full .nav__brand-rest { max-width: 5ch; opacity: 1; }
 .nav__right { justify-self: end; display: flex; align-items: center; gap: 1rem; }
 .nav__lang { background: none; border: 0; color: inherit; font: inherit; font-size: var(--label); letter-spacing: .14em; cursor: pointer; }
 .nav__lang .on { color: var(--gold); }

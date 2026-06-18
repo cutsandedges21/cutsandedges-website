@@ -2,29 +2,9 @@
 /* higher specificity than the base .hero rule so the pin actually holds */
 .home-stage .home-hero { position: sticky; top: 0; height: 100vh; min-height: 100vh; overflow: hidden; }
 
-/* giant C & E intro that scrubs into the logo */
-.home-intro {
-  position: absolute; top: 50%; left: 50%; z-index: 4;
-  transform: translate(-50%, -50%);
-  will-change: transform, opacity; color: var(--cream); pointer-events: none;
-}
-.home-intro__inner {
-  display: flex; align-items: center; justify-content: center;
-  animation: introExpand 1.3s cubic-bezier(.2, .7, .2, 1) both;
-}
-.home-intro__l {
-  font-family: var(--serif); font-weight: 600; font-size: clamp(4.5rem, 24vw, 20rem); line-height: .8;
-  display: inline-block; will-change: transform; text-shadow: 0 6px 50px rgba(20, 30, 20, .45);
-}
-.home-intro__l:nth-child(2) { font-size: clamp(2.8rem, 15vw, 12rem); color: var(--gold); margin: 0 -.12em; }
-
-@keyframes introExpand {
-  from { opacity: 0; transform: scale(.72); }
-  to   { opacity: 1; transform: scale(1); }
-}
-
-/* the real hero headline — hidden until the intro clears (JS fades it in) */
+/* the real hero headline — hidden until the morphing wordmark clears (JS fades it in) */
 .home-hero__content { z-index: 5; opacity: 0; will-change: transform, opacity; }
+.home-hero .hero__title { font-size: clamp(2.9rem, 6.9vw, 5.3rem); }
 
 /* reduced motion: no scrub, no giant intro, headline shown normally */
 .home-stage--static { height: auto; }
