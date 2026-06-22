@@ -14,7 +14,7 @@ export default {
     intro: 'De l’entretien régulier aux transformations complètes. Nous facturons par coupe, selon la taille de votre terrain.',
     cta: 'Demander une soumission',
   },
-  gallery: { title: 'Nos réalisations', intro: 'Regards cinématographiques sur les terrains que nous entretenons.', instaTitle: 'Suivez-nous', cta: 'Obtenir une soumission' },
+  gallery: { title: 'Nos réalisations', intro: 'Une qualité visible sur chaque terrain que nous entretenons — précise, constante et soignée avec fierté.', instaTitle: 'Suivez-nous', cta: 'Obtenir une soumission' },
   about: {
     title: 'L’excellence à chaque coupe',
     p1: 'Depuis 2021, Cuts & Edges offre des services professionnels d’entretien de pelouse axés sur la qualité et la satisfaction de la clientèle. Nous avons grandi pour servir nos communautés avec dévouement et précision.',
@@ -33,7 +33,7 @@ export default {
     calcResult: 'Taille estimée', success: 'Merci! Votre demande a été envoyée. Nous vous contacterons en 24 heures.',
     error: 'Une erreur est survenue. Veuillez nous appeler ou nous écrire directement.',
     directTitle: 'Préférez-vous nous joindre directement?',
-    sizes: { small: 'Petit (moins de 1 500 pi²)', medium: 'Moyen (1 500–2 000 pi²)', large: 'Grand (2 000+ pi²)' },
+    sizes: { xs: 'Moins de 250 pi²', s: '250–500 pi²', m: '500–750 pi²', l: '750–1 000 pi²', xl: '1 000–1 500 pi²', xxl: '1 500+ pi²' },
   },
   footer: { tagline: 'Entretien de pelouse professionnel qui transforme votre espace extérieur avec précision et soin.', exploreH: 'Explorer', contactH: 'Contact', rights: 'Tous droits réservés.', privacy: 'Politique de confidentialité', terms: 'Conditions d’utilisation' },
 }

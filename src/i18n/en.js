@@ -14,7 +14,7 @@ export default {
     intro: 'From routine maintenance to complete transformations. We charge per cut, with pricing based on your lawn size.',
     cta: 'Request a quote',
   },
-  gallery: { title: 'Our Work', intro: 'Cinematic looks at the properties we care for.', instaTitle: 'Follow along', cta: 'Get a quote' },
+  gallery: { title: 'Our Work', intro: 'Quality you can see in every property we care for — precise, consistent, and finished with pride.', instaTitle: 'Follow along', cta: 'Get a quote' },
   about: {
     title: 'Excellence in Every Cut',
     p1: 'Since 2021, Cuts & Edges has been providing professional lawn care services with a focus on quality and customer satisfaction. We’ve grown to serve our local communities with dedication and precision.',
@@ -33,7 +33,7 @@ export default {
     calcResult: 'Estimated size', success: 'Thanks! Your request has been sent. We’ll be in touch within 24 hours.',
     error: 'Something went wrong. Please call or email us directly.',
     directTitle: 'Prefer to reach us directly?',
-    sizes: { small: 'Small (under 1,500 sq ft)', medium: 'Medium (1,500–2,000 sq ft)', large: 'Large (2,000+ sq ft)' },
+    sizes: { xs: 'Under 250 sq ft', s: '250–500 sq ft', m: '500–750 sq ft', l: '750–1,000 sq ft', xl: '1,000–1,500 sq ft', xxl: '1,500+ sq ft' },
   },
   footer: { tagline: 'Professional lawn care that transforms your outdoor space with precision and care.', exploreH: 'Explore', contactH: 'Contact', rights: 'All rights reserved.', privacy: 'Privacy Policy', terms: 'Terms of Service' },
 }

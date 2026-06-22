@@ -7,7 +7,7 @@ const ENDPOINT = import.meta.env.VITE_FORM_ENDPOINT || ''
 
 export default function QuoteForm({ prefillSize }) {
   const { t, lang } = useLang()
-  const [v, setV] = useState({ name: '', email: '', phone: '', size: 'medium', address: '', services: [], details: '' })
+  const [v, setV] = useState({ name: '', email: '', phone: '', size: 'm', address: '', services: [], details: '' })
   const [errors, setErrors] = useState({})
   const [status, setStatus] = useState('idle') // idle | sending | success | error
 
@@ -36,7 +36,7 @@ export default function QuoteForm({ prefillSize }) {
     } catch {
       // mailto fallback (no backend / endpoint unreachable)
       const body = encodeURIComponent(
-        `Name: ${v.name}\nEmail: ${v.email}\nPhone: ${v.phone}\nLawn Size: ${v.size}\n` +
+        `Name: ${v.name}\nEmail: ${v.email}\nPhone: ${v.phone}\nLawn Size: ${t.contact.sizes[v.size] || v.size}\n` +
         `Address: ${v.address}\nServices: ${v.services.join(', ')}\nDetails: ${v.details}`
       )
       window.location.href = `mailto:${CONTACT.email}?subject=${encodeURIComponent('Quote request — ' + v.name)}&body=${body}`
@@ -60,15 +60,15 @@ export default function QuoteForm({ prefillSize }) {
         </label>
         <label>{t.contact.size}
           <select value={v.size} onChange={e => setV({ ...v, size: e.target.value })}>
-            <option value="small">{t.contact.sizes.small}</option>
-            <option value="medium">{t.contact.sizes.medium}</option>
-            <option value="large">{t.contact.sizes.large}</option>
+            {Object.entries(t.contact.sizes).map(([id, label]) => (
+              <option key={id} value={id}>{label}</option>
+            ))}
           </select>
         </label>
       </div>
 
-      <label>{t.contact.address}
-        <input value={v.address} onChange={e => setV({ ...v, address: e.target.value })} />
+      <label>{t.contact.address} *
+        <input value={v.address} onChange={e => setV({ ...v, address: e.target.value })} aria-invalid={!!errors.address} />
       </label>
 
       <fieldset className="quote-form__services" aria-invalid={!!errors.services}>

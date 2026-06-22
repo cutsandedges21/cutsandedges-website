@@ -2,15 +2,16 @@ import { describe, it, expect } from 'vitest'
 import { validateQuote } from '../lib/validateQuote.js'
 
 describe('validateQuote', () => {
-  it('requires name, valid email, phone, and >=1 service', () => {
-    const errors = validateQuote({ name: '', email: 'bad', phone: '', services: [] })
+  it('requires name, valid email, phone, address, and >=1 service', () => {
+    const errors = validateQuote({ name: '', email: 'bad', phone: '', address: '', services: [] })
     expect(errors.name).toBeTruthy()
     expect(errors.email).toBeTruthy()
     expect(errors.phone).toBeTruthy()
+    expect(errors.address).toBeTruthy()
     expect(errors.services).toBeTruthy()
   })
   it('passes a complete valid submission', () => {
-    const errors = validateQuote({ name: 'Jo', email: 'jo@x.com', phone: '5145619746', services: ['mowing'] })
+    const errors = validateQuote({ name: 'Jo', email: 'jo@x.com', phone: '5145619746', address: '123 Rue Principale', services: ['mowing'] })
     expect(Object.keys(errors)).toHaveLength(0)
   })
 })

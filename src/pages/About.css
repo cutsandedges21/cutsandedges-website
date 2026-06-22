@@ -1,7 +1,7 @@
 .about-story { display: grid; grid-template-columns: 2fr 1fr; gap: 3rem; align-items: start; }
 .about-story__text p { max-width: 60ch; margin-bottom: 1.2rem; font-size: 1.05rem; }
 .about-stat { text-align: right; }
-.about-stat__num { font-family: var(--serif); font-size: clamp(3rem, 8vw, 6rem); color: var(--forest); display: block; line-height: 1; }
+.about-stat__num { font-family: var(--serif); font-size: clamp(3rem, 8vw, 6rem); color: var(--forest); display: block; line-height: 1; margin-bottom: .6rem; }
 .about-stat__label { font-size: var(--label); letter-spacing: .2em; text-transform: uppercase; opacity: .7; }
 
 .about-trust { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem; margin-top: 2rem; }

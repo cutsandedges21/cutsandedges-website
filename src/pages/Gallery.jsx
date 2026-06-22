@@ -1,5 +1,5 @@
 import { useLang } from '../i18n/LanguageContext.jsx'
-import { GALLERY_CLIPS, CONTACT } from '../i18n/content.js'
+import { CONTACT } from '../i18n/content.js'
 import Hero from '../components/Hero.jsx'
 import Reveal from '../components/Reveal.jsx'
 import SectionLabel from '../components/SectionLabel.jsx'
@@ -8,7 +8,7 @@ import PillButton from '../components/PillButton.jsx'
 import './Gallery.css'
 
 export default function Gallery() {
-  const { t, lang } = useLang()
+  const { t } = useLang()
   return (
     <>
       <Hero
@@ -20,18 +20,7 @@ export default function Gallery() {
       </section>
 
       <section className="section container">
-        <div className="gallery-grid">
-          {GALLERY_CLIPS.map((c, i) => (
-            <Reveal key={i} className={`gallery-clip ${i === 0 ? 'gallery-clip--feature' : ''}`}>
-              <video src={c.src} poster={c.poster} muted loop playsInline controls preload="none" />
-              <span className="eyebrow gallery-clip__label">{c.label[lang]}</span>
-            </Reveal>
-          ))}
-        </div>
-      </section>
-
-      <section className="section container">
-        <SectionLabel index="02">{t.gallery.instaTitle}</SectionLabel>
+        <SectionLabel index="01">{t.gallery.instaTitle}</SectionLabel>
         <h2 className="gallery-insta-h">{CONTACT.handle}</h2>
         <InstagramStrip />
         <div className="gallery-social-links">

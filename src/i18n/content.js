@@ -4,7 +4,7 @@ export const CONTACT = {
   instagram: 'https://www.instagram.com/cutsandedges21',
   facebook: 'https://www.facebook.com/cutsandedges21/',
   handle: '@cutsandedges21',
-  areas: ['Rivière-des-Prairies', 'Pointe-aux-Trembles', 'Anjou'],
+  areas: ['Rivière-des-Prairies', 'Pointe-aux-Trembles', 'Anjou', 'Saint-Léonard'],
   region: 'Greater Montreal, QC',
 }
 
@@ -12,9 +12,6 @@ export const SERVICES = [
   { id: 'mowing',
     en: { name: 'Lawn Mowing & Maintenance', desc: 'Regular mowing, edging, and trimming to keep your lawn pristine week after week.', items: ['Weekly or bi-weekly service', 'Precision edging', 'Debris cleanup'] },
     fr: { name: 'Tonte et entretien', desc: 'Tonte, bordures et taille régulières pour une pelouse impeccable semaine après semaine.', items: ['Service hebdomadaire ou aux deux semaines', 'Bordures de précision', 'Nettoyage des débris'] } },
-  { id: 'landscaping',
-    en: { name: 'Landscaping', desc: 'Small landscaping jobs to enhance your outdoor space.', items: ['Plant selection', 'Hardscape installation', 'Garden bed maintenance'] },
-    fr: { name: 'Aménagement paysager', desc: 'Petits travaux d’aménagement pour rehausser votre espace extérieur.', items: ['Choix de plantes', 'Installation d’aménagements', 'Entretien des plates-bandes'] } },
   { id: 'seasonal',
     en: { name: 'Seasonal Services', desc: 'Keep your lawn healthy year-round with cleanup and seasonal care.', items: ['Spring/fall cleanup', 'Leaf removal', 'Debris clearing'] },
     fr: { name: 'Services saisonniers', desc: 'Gardez votre pelouse en santé toute l’année avec le nettoyage saisonnier.', items: ['Nettoyage printemps/automne', 'Ramassage des feuilles', 'Dégagement des débris'] } },
