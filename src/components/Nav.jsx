@@ -24,6 +24,11 @@ export default function Nav() {
   // It stays "C & E" until the bar's bottom edge meets the hero's ↓ scroll cue,
   // at which point the bar fills cream and it expands into "Cuts & Edges".
   const [brandFull, setBrandFull] = useState(!isHome || reduce)
+  // the giant is sized by measuring the wordmark, so it must wait for the real
+  // serif: measuring the Georgia fallback then swapping fonts mis-sizes it
+  const [fontReady, setFontReady] = useState(
+    typeof document === 'undefined' || !document.fonts || document.fonts.status === 'loaded'
+  )
 
   useLayoutEffect(() => {
     let raf = null
@@ -41,23 +46,27 @@ export default function Nav() {
         const p = stage ? clamp(-stage.getBoundingClientRect().top / vh, 0, 1) : 0
         const e = easeInOut(p)
 
+        const rootPx = parseFloat(getComputedStyle(document.documentElement).fontSize) || 16
+        const baseFontPx = rootPx * 1.5      // .nav__brand is 1.5rem
+
         // airy letter-spacing while giant, tightening to fit the bar as it docks
-        const fontPx = parseFloat(getComputedStyle(brand).fontSize) || 24
         const lsEm = 0.04 + 0.36 * (1 - e)   // .40em giant → .04em docked
         brand.style.letterSpacing = `${lsEm}em`
 
-        // size the giant by LETTER HEIGHT (≈ clamp(4.5rem, 24vw, 20rem)) so the
-        // wide spacing pushes the wordmark out instead of shrinking the glyphs;
-        // only rein the scale back if it would overflow the viewport width
-        const giantPx = clamp(window.innerWidth * 0.48, 144, 640)
-        let giantScale = clamp(giantPx / fontPx, 1, 40)
-        const naturalW = brand.offsetWidth || 1
-        const maxW = window.innerWidth * 0.94
-        if (naturalW * giantScale > maxW) giantScale = maxW / naturalW
-        const scale = 1 + (giantScale - 1) * (1 - e)
-        const ty = (vh / 2 - navH / 2) * (1 - e)
-        const tx = (lsEm * fontPx * scale) / 2   // cancel trailing letter-spacing so it stays centred
-        brand.style.transform = `translate(${tx}px, ${ty}px) scale(${scale})`
+        // scale via REAL font-size (not a transform) so the glyphs are rasterised
+        // crisply at every size; cap the giant so it can't overflow the viewport
+        const curPx = parseFloat(getComputedStyle(brand).fontSize) || baseFontPx
+        const widthPerPx = (brand.offsetWidth || 1) / curPx
+        const maxFontPx = (window.innerWidth * 0.94) / widthPerPx
+        const giantFontPx = Math.min(clamp(window.innerWidth * 0.48, 144, 640), maxFontPx)
+        const sizePx = baseFontPx + (giantFontPx - baseFontPx) * (1 - e)
+        brand.style.fontSize = `${sizePx}px`
+
+        // lift from the docked navbar slot up to the centre of the viewport
+        const topPx = navH / 2 + (vh / 2 - navH / 2) * (1 - e)
+        const tx = (lsEm * sizePx) / 2       // cancel trailing letter-spacing so it stays centred
+        brand.style.top = `${topPx}px`
+        brand.style.transform = `translate(calc(-50% + ${tx}px), -50%)`
 
         // fill the bar + expand to "Cuts & Edges" once its bottom edge reaches
         // the ↓ scroll cue (i.e. the hero has scrolled out under the navbar)
@@ -65,7 +74,12 @@ export default function Nav() {
         setScrolled(past)
         setBrandFull(past)
       } else {
-        if (brand) { brand.style.transform = ''; brand.style.letterSpacing = '' }
+        if (brand) {
+          brand.style.transform = ''
+          brand.style.letterSpacing = ''
+          brand.style.fontSize = ''
+          brand.style.top = ''
+        }
         setScrolled(window.scrollY > 40)
         setBrandFull(true)
       }
@@ -73,6 +87,10 @@ export default function Nav() {
 
     const onScroll = () => { if (!raf) raf = requestAnimationFrame(update) }
     update()
+    // re-size against the real font once it's active, then reveal the giant
+    if (!fontReady && document.fonts) {
+      document.fonts.ready.then(() => { update(); setFontReady(true) })
+    }
     window.addEventListener('scroll', onScroll, { passive: true })
     window.addEventListener('resize', onScroll)
     return () => {
@@ -91,7 +109,7 @@ export default function Nav() {
         <Link
           to="/"
           ref={brandRef}
-          className={`nav__brand ${isHome && !reduce ? 'nav__brand--morph' : ''} ${brandFull || open ? 'nav__brand--full' : ''}`}
+          className={`nav__brand ${isHome && !reduce ? 'nav__brand--morph' : ''} ${isHome && !reduce && !fontReady ? 'nav__brand--pending' : ''} ${brandFull || open ? 'nav__brand--full' : ''}`}
           onClick={() => setOpen(false)}
         >
           C<span className="nav__brand-rest">uts</span>
