@@ -19,6 +19,9 @@ describe('pickImageUrl', () => {
   it('uses thumbnail_url for videos/reels', () => {
     expect(pickImageUrl({ media_type: 'VIDEO', thumbnail_url: 't.jpg' })).toBe('t.jpg')
   })
+  it('uses thumbnail_url for reels (VIDEO + REELS product type)', () => {
+    expect(pickImageUrl({ media_type: 'VIDEO', media_product_type: 'REELS', thumbnail_url: 'r.jpg' })).toBe('r.jpg')
+  })
   it('uses the first child for carousels', () => {
     const media = { media_type: 'CAROUSEL_ALBUM', children: { data: [{ media_type: 'IMAGE', media_url: 'c.jpg' }] } }
     expect(pickImageUrl(media)).toBe('c.jpg')
@@ -39,6 +42,15 @@ describe('trimCaption', () => {
   it('trims long captions on a word boundary with an ellipsis', () => {
     const caption = 'a'.repeat(60) + ' ' + 'b'.repeat(80) // 141 chars
     expect(trimCaption(caption, 120)).toBe('a'.repeat(60) + '…')
+  })
+  it('hard-cuts a long caption that has no spaces', () => {
+    expect(trimCaption('a'.repeat(150), 120)).toBe('a'.repeat(120) + '…')
+  })
+  it('never splits an emoji across the cut boundary', () => {
+    const caption = '🌱'.repeat(150) // each emoji is a surrogate pair
+    const out = trimCaption(caption, 10)
+    expect(out).toBe('🌱'.repeat(10) + '…')
+    expect(out).not.toContain('�') // no replacement char from a broken pair
   })
 })
 
