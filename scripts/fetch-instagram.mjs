@@ -35,7 +35,11 @@ async function refreshToken(currentToken) {
 async function fetchMedia(activeToken) {
   const url = `https://graph.instagram.com/me/media?fields=${encodeURIComponent(FIELDS)}&limit=12&access_token=${activeToken}`
   const res = await fetch(url)
-  if (!res.ok) throw new Error(`Media fetch failed: HTTP ${res.status} — ${await res.text()}`)
+  if (!res.ok) {
+    // Cap the logged body so an unexpectedly large/echoing response can't flood the log.
+    const body = (await res.text()).slice(0, 500)
+    throw new Error(`Media fetch failed: HTTP ${res.status} — ${body}`)
+  }
   const json = await res.json()
   return Array.isArray(json.data) ? json.data : []
 }
@@ -56,6 +60,14 @@ async function pruneImages(keepFilenames) {
   }
 }
 
+// Hand the refreshed token back to the workflow so it can update the repo secret.
+async function persistRefreshedToken(newToken) {
+  if (newToken && process.env.GITHUB_OUTPUT) {
+    console.log(`::add-mask::${newToken}`)
+    await appendFile(process.env.GITHUB_OUTPUT, `token=${newToken}\n`)
+  }
+}
+
 async function main() {
   await mkdir(IMAGE_DIR, { recursive: true })
 
@@ -64,6 +76,14 @@ async function main() {
 
   const media = await fetchMedia(activeToken)
   const latest = selectLatest(media, 4)
+
+  // Guard: never wipe a good feed if a fetch transiently returns no imageable posts.
+  // Keep the last-known-good data (and still persist the refreshed token).
+  if (latest.length === 0) {
+    console.log('::warning::No Instagram posts with a usable image were returned; keeping existing feed data.')
+    await persistRefreshedToken(newToken)
+    return
+  }
 
   const items = []
   const keep = new Set(['.gitkeep'])
@@ -78,11 +98,7 @@ async function main() {
   await writeFile(DATA_FILE, JSON.stringify(items, null, 2) + '\n')
   console.log(`Wrote ${items.length} posts to src/data/instagram.json`)
 
-  // Hand the refreshed token back to the workflow so it can update the repo secret.
-  if (newToken && process.env.GITHUB_OUTPUT) {
-    console.log(`::add-mask::${newToken}`)
-    await appendFile(process.env.GITHUB_OUTPUT, `token=${newToken}\n`)
-  }
+  await persistRefreshedToken(newToken)
 }
 
 main().catch(err => {
