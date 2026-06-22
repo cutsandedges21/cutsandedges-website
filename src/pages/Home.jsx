@@ -51,7 +51,7 @@ export default function Home() {
       <section className="section container">
         <SectionLabel index="04">{t.home.instaLabel}</SectionLabel>
         <h2 className="home__h2">{t.home.instaTitle}</h2>
-        <InstagramStrip />
+        <InstagramStrip limit={2} />
       </section>
 
       <CTABand />
