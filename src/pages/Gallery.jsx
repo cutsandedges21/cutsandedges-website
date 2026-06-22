@@ -11,7 +11,7 @@ export default function Gallery() {
   const { t, lang } = useLang()
   return (
     <>
-      <Hero short
+      <Hero
         video="/videos/hero-gallery.mp4" poster="/videos/hero-gallery-poster.jpg"
         eyebrow={t.nav.gallery} title={t.gallery.title} />
 

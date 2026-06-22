@@ -11,7 +11,7 @@ export default function About() {
   const { t, lang } = useLang()
   return (
     <>
-      <Hero short
+      <Hero
         video="/videos/hero-about.mp4" poster="/videos/hero-about-poster.jpg"
         eyebrow={t.nav.about} title={t.about.title} />
 

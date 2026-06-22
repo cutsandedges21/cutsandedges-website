@@ -11,7 +11,7 @@ export default function Contact() {
   const [size, setSize] = useState(null)
   return (
     <>
-      <Hero short
+      <Hero
         video="/videos/hero-contact.mp4" poster="/videos/hero-contact-poster.jpg"
         eyebrow={t.nav.contact} title={t.contact.title} />
 

@@ -10,7 +10,7 @@ export default function Services() {
   const { t, lang } = useLang()
   return (
     <>
-      <Hero short
+      <Hero
         video="/videos/hero-services.mp4" poster="/videos/hero-services-poster.jpg"
         eyebrow={t.nav.services} title={t.services.title} />
 
