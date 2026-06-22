@@ -5,7 +5,7 @@ export default {
     positioning: 'Nous ne faisons pas qu’entretenir des pelouses — nous créons des espaces extérieurs que les propriétaires adorent.',
     servicesLabel: 'Services', servicesTitle: 'Entretien complet de pelouse', servicesLink: 'Voir tous les services',
     aboutLabel: 'À propos', aboutTitle: 'L’excellence à chaque coupe', yearsStat: '5+', yearsLabel: 'Ans d’expérience', aboutLink: 'Notre histoire',
-    testimonialsLabel: 'Témoignages', testimonialsTitle: 'Ce que disent nos clients', testimonialsLink: 'Lire plus',
+    testimonialsLabel: 'Témoignages', testimonialsTitle: 'Ce que disent certains de nos clients', testimonialsLink: 'Lire plus',
     instaLabel: 'Suivez-nous', instaTitle: 'Voir nos réalisations', instaLink: 'Voir la galerie',
     ctaTitle: 'Obtenez votre soumission gratuite', ctaText: 'Parlez-nous de votre terrain et nous répondrons en 24 heures.', ctaButton: 'Soumission gratuite',
   },

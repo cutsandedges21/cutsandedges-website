@@ -5,7 +5,7 @@ export default {
     positioning: 'We’re not just maintaining lawns — we’re creating outdoor spaces homeowners love.',
     servicesLabel: 'Services', servicesTitle: 'Comprehensive Lawn Care', servicesLink: 'View all services',
     aboutLabel: 'About', aboutTitle: 'Excellence in Every Cut', yearsStat: '5+', yearsLabel: 'Years Experience', aboutLink: 'Our story',
-    testimonialsLabel: 'Testimonials', testimonialsTitle: 'What our customers say', testimonialsLink: 'Read more',
+    testimonialsLabel: 'Testimonials', testimonialsTitle: 'What some of our customers say', testimonialsLink: 'Read more',
     instaLabel: 'Follow Us', instaTitle: 'See our latest work', instaLink: 'View the gallery',
     ctaTitle: 'Get Your Free Quote', ctaText: 'Tell us about your property and we’ll respond within 24 hours.', ctaButton: 'Get Free Quote',
   },

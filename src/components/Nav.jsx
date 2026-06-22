@@ -56,7 +56,12 @@ export default function Nav() {
         // scale via REAL font-size (not a transform) so the glyphs are rasterised
         // crisply at every size; cap the giant so it can't overflow the viewport
         const curPx = parseFloat(getComputedStyle(brand).fontSize) || baseFontPx
-        const widthPerPx = (brand.offsetWidth || 1) / curPx
+        // measure just "C & E": subtract the reveal fragments, so arriving from
+        // another page (where the wordmark read "Cuts & Edges", its fragments still
+        // expanded) can't be mis-measured and shrink the giant
+        let restW = 0
+        brand.querySelectorAll('.nav__brand-rest').forEach(r => { restW += r.offsetWidth })
+        const widthPerPx = ((brand.offsetWidth - restW) || 1) / curPx
         const maxFontPx = (window.innerWidth * 0.94) / widthPerPx
         const giantFontPx = Math.min(clamp(window.innerWidth * 0.48, 144, 640), maxFontPx)
         const sizePx = baseFontPx + (giantFontPx - baseFontPx) * (1 - e)

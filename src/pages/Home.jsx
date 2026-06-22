@@ -45,7 +45,7 @@ export default function Home() {
       <section className="section container">
         <SectionLabel index="03">{t.home.testimonialsLabel}</SectionLabel>
         <h2 className="home__h2">{t.home.testimonialsTitle}</h2>
-        <Testimonials limit={3} />
+        <Testimonials limit={2} />
       </section>
 
       <section className="section container">
