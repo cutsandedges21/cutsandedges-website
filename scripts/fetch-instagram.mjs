@@ -23,7 +23,9 @@ async function refreshToken(currentToken) {
   const url = `https://graph.instagram.com/refresh_access_token?grant_type=ig_refresh_token&access_token=${currentToken}`
   const res = await fetch(url)
   if (!res.ok) {
-    console.warn(`Token refresh skipped (HTTP ${res.status}). Continuing with current token.`)
+    // Surface as a GitHub Actions warning annotation so a persistent refresh failure
+    // is visible in the run status, rather than silently drifting toward expiry.
+    console.log(`::warning::Instagram token refresh failed (HTTP ${res.status}). Using the existing token; it will expire if this keeps failing — see docs/instagram-setup.md.`)
     return null
   }
   const json = await res.json()

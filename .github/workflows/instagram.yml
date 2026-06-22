@@ -8,6 +8,11 @@ on:
 permissions:
   contents: write
 
+# Serialize runs so an overlapping scheduled + manual run can't race on git push.
+concurrency:
+  group: instagram-feed-refresh
+  cancel-in-progress: false
+
 jobs:
   refresh:
     runs-on: ubuntu-latest
@@ -25,7 +30,7 @@ jobs:
         run: node scripts/fetch-instagram.mjs
 
       - name: Persist refreshed token
-        if: steps.fetch.outputs.token != ''
+        if: ${{ steps.fetch.outputs.token != '' }}
         env:
           GH_TOKEN: ${{ secrets.IG_REFRESH_PAT }}
           NEW_TOKEN: ${{ steps.fetch.outputs.token }}

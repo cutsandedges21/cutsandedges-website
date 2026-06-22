@@ -45,6 +45,11 @@ should see a new commit ("chore: refresh Instagram feed") with images in
 `public/instagram/` and updated `src/data/instagram.json`, and the site will redeploy
 showing your real posts.
 
+**If the run fails with an auth/permission error:** in the Meta app dashboard, make sure
+`@cutsandedges21` is listed as the connected/authorized account under "API setup with
+Instagram login" (re-do step 3 to mint a fresh token if needed). The app can stay in
+Development mode for your own account, but the account must be connected to the app.
+
 ## Maintenance
 None. The workflow runs every Monday, refreshes the token, and updates the feed
 automatically. If you ever change the Instagram account, repeat steps 3 and 5.
