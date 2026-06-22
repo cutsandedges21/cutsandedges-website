@@ -34,7 +34,7 @@ export default function InstagramStrip({ limit = 4 }) {
             target="_blank"
             rel="noreferrer"
           >
-            <img className="insta__img" src={post.image} alt={post.caption || 'Instagram post'} loading="lazy" />
+            <img className="insta__img" src={post.image} alt={`Instagram post by ${CONTACT.handle}`} loading="lazy" />
             <div className="insta__overlay">
               <p className="insta__stats">
                 {post.likes != null && <span>♥ {post.likes}</span>}
