@@ -22,7 +22,7 @@ export default function Gallery() {
       <section className="section container">
         <SectionLabel index="01">{t.gallery.instaTitle}</SectionLabel>
         <h2 className="gallery-insta-h">{CONTACT.handle}</h2>
-        <InstagramStrip />
+        <InstagramStrip limit={4} />
         <div className="gallery-social-links">
           <a className="link-underline" href={CONTACT.instagram} target="_blank" rel="noreferrer">Instagram</a>
           <a className="link-underline" href={CONTACT.facebook} target="_blank" rel="noreferrer">Facebook</a>
