@@ -3,32 +3,33 @@ import {
   mediaType, pickImageUrl, trimCaption, transformMedia, selectLatest, feedItems,
 } from '../lib/instagram.js'
 
+// Helper to build a Behold-style sizes object.
+const sizes = urls => Object.fromEntries(
+  Object.entries(urls).map(([k, mediaUrl]) => [k, { mediaUrl, width: 100, height: 100 }])
+)
+
 describe('mediaType', () => {
-  it('maps reels, carousels, images, and videos', () => {
-    expect(mediaType({ media_type: 'VIDEO', media_product_type: 'REELS' })).toBe('REELS')
-    expect(mediaType({ media_type: 'CAROUSEL_ALBUM' })).toBe('CAROUSEL')
-    expect(mediaType({ media_type: 'IMAGE' })).toBe('IMAGE')
-    expect(mediaType({ media_type: 'VIDEO', media_product_type: 'FEED' })).toBe('VIDEO')
+  it('maps carousels, images, and videos', () => {
+    expect(mediaType({ mediaType: 'CAROUSEL_ALBUM' })).toBe('CAROUSEL')
+    expect(mediaType({ mediaType: 'IMAGE' })).toBe('IMAGE')
+    expect(mediaType({ mediaType: 'VIDEO' })).toBe('VIDEO')
   })
 })
 
 describe('pickImageUrl', () => {
-  it('uses media_url for images', () => {
-    expect(pickImageUrl({ media_type: 'IMAGE', media_url: 'a.jpg' })).toBe('a.jpg')
+  it('prefers the large size', () => {
+    expect(pickImageUrl({ sizes: sizes({ small: 's.webp', large: 'l.webp' }) })).toBe('l.webp')
   })
-  it('uses thumbnail_url for videos/reels', () => {
-    expect(pickImageUrl({ media_type: 'VIDEO', thumbnail_url: 't.jpg' })).toBe('t.jpg')
+  it('falls back through the size preference order', () => {
+    expect(pickImageUrl({ sizes: sizes({ small: 's.webp', medium: 'm.webp' }) })).toBe('m.webp')
   })
-  it('uses thumbnail_url for reels (VIDEO + REELS product type)', () => {
-    expect(pickImageUrl({ media_type: 'VIDEO', media_product_type: 'REELS', thumbnail_url: 'r.jpg' })).toBe('r.jpg')
-  })
-  it('uses the first child for carousels', () => {
-    const media = { media_type: 'CAROUSEL_ALBUM', children: { data: [{ media_type: 'IMAGE', media_url: 'c.jpg' }] } }
-    expect(pickImageUrl(media)).toBe('c.jpg')
+  it('falls back to the first carousel child when the post has no sizes', () => {
+    const post = { mediaType: 'CAROUSEL_ALBUM', children: [{ sizes: sizes({ large: 'c.webp' }) }] }
+    expect(pickImageUrl(post)).toBe('c.webp')
   })
   it('returns null when no usable image exists', () => {
-    expect(pickImageUrl({ media_type: 'VIDEO' })).toBeNull()
-    expect(pickImageUrl({ media_type: 'CAROUSEL_ALBUM', children: { data: [] } })).toBeNull()
+    expect(pickImageUrl({})).toBeNull()
+    expect(pickImageUrl({ mediaType: 'CAROUSEL_ALBUM', children: [] })).toBeNull()
   })
 })
 
@@ -55,34 +56,35 @@ describe('trimCaption', () => {
 })
 
 describe('transformMedia', () => {
-  it('builds the stored shape with engagement counts', () => {
-    const media = {
-      id: '123', media_type: 'IMAGE', media_url: 'x.jpg',
-      caption: 'Hi', permalink: 'https://insta/p/123',
-      timestamp: '2026-06-20T14:00:00+0000', like_count: 75, comments_count: 3,
+  it('builds the stored shape with engagement counts and prefers prunedCaption', () => {
+    const post = {
+      id: '123', mediaType: 'IMAGE', sizes: sizes({ large: 'x.webp' }),
+      caption: 'Hi #lawn', prunedCaption: 'Hi', permalink: 'https://insta/p/123',
+      timestamp: '2026-06-20T14:00:00+0000', likeCount: 75, commentsCount: 3,
     }
-    expect(transformMedia(media, '/instagram/123.jpg')).toEqual({
-      id: '123', type: 'IMAGE', image: '/instagram/123.jpg',
+    expect(transformMedia(post, '/instagram/123.webp')).toEqual({
+      id: '123', type: 'IMAGE', image: '/instagram/123.webp',
       caption: 'Hi', permalink: 'https://insta/p/123',
       timestamp: '2026-06-20T14:00:00+0000', likes: 75, comments: 3,
     })
   })
-  it('omits counts that are hidden/absent', () => {
-    const media = { id: '9', media_type: 'IMAGE', media_url: 'x.jpg', caption: '', permalink: 'p', timestamp: 't' }
-    const out = transformMedia(media, '/instagram/9.jpg')
+  it('falls back to caption when prunedCaption is absent, and omits hidden counts', () => {
+    const post = { id: '9', mediaType: 'IMAGE', caption: 'Hello', permalink: 'p', timestamp: 't' }
+    const out = transformMedia(post, '/instagram/9.webp')
+    expect(out.caption).toBe('Hello')
     expect(out).not.toHaveProperty('likes')
     expect(out).not.toHaveProperty('comments')
   })
 })
 
 describe('selectLatest', () => {
-  it('keeps the first N items that have a usable image', () => {
+  it('keeps the first N posts that have a usable image', () => {
     const list = [
-      { id: '1', media_type: 'IMAGE', media_url: 'a.jpg' },
-      { id: '2', media_type: 'VIDEO' },                 // no image → skipped
-      { id: '3', media_type: 'IMAGE', media_url: 'c.jpg' },
-      { id: '4', media_type: 'IMAGE', media_url: 'd.jpg' },
-      { id: '5', media_type: 'IMAGE', media_url: 'e.jpg' },
+      { id: '1', sizes: sizes({ large: 'a.webp' }) },
+      { id: '2' },                                      // no image → skipped
+      { id: '3', sizes: sizes({ large: 'c.webp' }) },
+      { id: '4', sizes: sizes({ large: 'd.webp' }) },
+      { id: '5', sizes: sizes({ large: 'e.webp' }) },
     ]
     expect(selectLatest(list, 3).map(m => m.id)).toEqual(['1', '3', '4'])
   })

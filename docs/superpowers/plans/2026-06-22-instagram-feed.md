@@ -1,5 +1,18 @@
 # Instagram Feed Implementation Plan
 
+> **Revision 2026-06-22 — implemented against Behold.so, not the Instagram Graph API.**
+> The owner couldn't create a Meta developer account, so the data source was switched to
+> the free **Behold.so** JSON feed. Tasks 1, 6, 7, 8 below describe the original Graph-API
+> approach and are kept for history. The shipped code differs as follows:
+> - `src/lib/instagram.js` maps **Behold** posts (`sizes`/`mediaUrl`, `likeCount`,
+>   `commentsCount`, `prunedCaption`, `children[]`), not raw Graph API fields.
+> - `scripts/fetch-instagram.mjs` GETs `BEHOLD_FEED_URL` (no token); no refresh/PAT.
+> - `.github/workflows/instagram.yml` has no secrets and no token-persist step; it reads
+>   the non-secret repo variable `vars.BEHOLD_FEED_URL`.
+> - `docs/instagram-setup.md` and design spec §4/§9 document the Behold setup.
+> Tasks 2–5 (seed data, component, placement, styling) shipped exactly as written — the
+> stored JSON contract and UI are unchanged.
+
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Replace the placeholder Instagram strip with the 4 latest `@cutsandedges21` posts (4 on Gallery, 2 on Home), kept fresh by a free weekly GitHub Action that caches images into the repo.

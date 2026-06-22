@@ -1,27 +1,34 @@
-// Pure helpers for shaping Instagram Graph API media into the data our UI renders.
+// Pure helpers for shaping Behold.so JSON-feed posts into the data our UI renders.
+// (Behold proxies the @cutsandedges21 Instagram account — see docs/instagram-setup.md.)
 // No network or filesystem access here so it can be unit-tested in isolation.
 
-// Normalize Instagram's media-type fields into a single display type.
-// media_product_type is only present for AD/FEED/STORY/REELS; when absent the strict
-// check falls through. A plain feed video therefore returns its raw 'VIDEO' media_type.
-export function mediaType(media) {
-  if (media.media_product_type === 'REELS') return 'REELS'
-  if (media.media_type === 'CAROUSEL_ALBUM') return 'CAROUSEL'
-  return media.media_type // 'IMAGE' | 'VIDEO'
+// Behold size keys in descending preference for a tile image.
+const SIZE_PREFERENCE = ['large', 'medium', 'full', 'small']
+
+// Normalize Behold's mediaType into our display type.
+// Behold does not distinguish reels (they arrive as VIDEO), which is fine — every
+// post renders as a still image in the strip and `type` is only a hint.
+export function mediaType(post) {
+  return post.mediaType === 'CAROUSEL_ALBUM' ? 'CAROUSEL' : post.mediaType // 'IMAGE' | 'VIDEO'
 }
 
-// Choose the best still-image URL (cover frame for video/reels, first child for
-// carousels). Returns null when no usable image exists.
-export function pickImageUrl(media) {
-  if (media.media_type === 'VIDEO') return media.thumbnail_url || null
-  if (media.media_type === 'CAROUSEL_ALBUM') {
-    const first = media.children && media.children.data && media.children.data[0]
-    if (!first) return null
-    return first.media_type === 'VIDEO'
-      ? first.thumbnail_url || null
-      : first.media_url || null
+// Pick the best optimized image URL from a Behold `sizes` object, or null.
+function urlFromSizes(sizes) {
+  if (!sizes) return null
+  for (const key of SIZE_PREFERENCE) {
+    if (sizes[key] && sizes[key].mediaUrl) return sizes[key].mediaUrl
   }
-  return media.media_url || null
+  return null
+}
+
+// Choose the best still-image URL for a post. Carousels fall back to their first child.
+// Returns null when no usable image exists.
+export function pickImageUrl(post) {
+  const direct = urlFromSizes(post.sizes)
+  if (direct) return direct
+  const child = Array.isArray(post.children) && post.children[0]
+  if (child) return urlFromSizes(child.sizes) || child.mediaUrl || null
+  return null
 }
 
 // Trim a caption to maxLen characters on a word boundary, adding an ellipsis.
@@ -36,27 +43,28 @@ export function trimCaption(caption, maxLen = 120) {
   return (lastSpace > 0 ? slice.slice(0, lastSpace) : slice).trimEnd() + '…'
 }
 
-// Transform one raw API media object into our stored shape.
-// imagePath is the local cached path the caller assigns (e.g. "/instagram/<id>.jpg").
-export function transformMedia(media, imagePath) {
+// Transform one Behold post into our stored shape.
+// imagePath is the local cached path the caller assigns (e.g. "/instagram/<id>.webp").
+// Prefers prunedCaption (hashtags removed) for a cleaner tile caption.
+export function transformMedia(post, imagePath) {
   const item = {
-    id: media.id,
-    type: mediaType(media),
+    id: post.id,
+    type: mediaType(post),
     image: imagePath,
-    caption: trimCaption(media.caption),
-    permalink: media.permalink,
-    timestamp: media.timestamp,
+    caption: trimCaption(post.prunedCaption || post.caption),
+    permalink: post.permalink,
+    timestamp: post.timestamp,
   }
-  if (Number.isInteger(media.like_count)) item.likes = media.like_count
-  if (Number.isInteger(media.comments_count)) item.comments = media.comments_count
+  if (Number.isInteger(post.likeCount)) item.likes = post.likeCount
+  if (Number.isInteger(post.commentsCount)) item.comments = post.commentsCount
   return item
 }
 
-// Used by the fetch script: from a raw API media list, keep the first `limit`
+// Used by the fetch script: from the Behold posts array, keep the first `limit`
 // items that have a usable image.
-export function selectLatest(list, limit = 4) {
-  if (!Array.isArray(list)) return []
-  return list.filter(m => pickImageUrl(m) !== null).slice(0, limit)
+export function selectLatest(posts, limit = 4) {
+  if (!Array.isArray(posts)) return []
+  return posts.filter(p => pickImageUrl(p) !== null).slice(0, limit)
 }
 
 // Used by the InstagramStrip component: the already-stored feed sliced to `limit`,

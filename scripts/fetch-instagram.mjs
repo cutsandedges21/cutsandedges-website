@@ -1,8 +1,12 @@
-// Fetches the latest Instagram posts for @cutsandedges21, caches their images into
-// public/instagram/, and writes src/data/instagram.json. Run weekly by GitHub Actions
-// (see .github/workflows/instagram.yml) or locally with IG_ACCESS_TOKEN set.
+// Fetches the latest Instagram posts via the Behold.so JSON feed, caches their images
+// into public/instagram/, and writes src/data/instagram.json. Run weekly by GitHub
+// Actions (see .github/workflows/instagram.yml) or locally with BEHOLD_FEED_URL set.
+//
+// No Instagram/Meta token is needed — the Behold feed URL is public and safe to expose.
+// Caching images into the repo keeps the site fast and self-contained, and means
+// visitor traffic never counts against Behold's free monthly view cap.
 
-import { writeFile, mkdir, readdir, unlink, appendFile } from 'node:fs/promises'
+import { writeFile, mkdir, readdir, unlink } from 'node:fs/promises'
 import { fileURLToPath } from 'node:url'
 import { dirname, join } from 'node:path'
 import { selectLatest, transformMedia, pickImageUrl } from '../src/lib/instagram.js'
@@ -10,38 +14,22 @@ import { selectLatest, transformMedia, pickImageUrl } from '../src/lib/instagram
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..')
 const IMAGE_DIR = join(ROOT, 'public', 'instagram')
 const DATA_FILE = join(ROOT, 'src', 'data', 'instagram.json')
-const FIELDS = 'id,caption,media_type,media_product_type,media_url,thumbnail_url,permalink,timestamp,like_count,comments_count,children{media_url,media_type,thumbnail_url}'
 
-const token = process.env.IG_ACCESS_TOKEN
-if (!token) {
-  console.error('IG_ACCESS_TOKEN is not set.')
+const feedUrl = process.env.BEHOLD_FEED_URL
+if (!feedUrl) {
+  console.error('BEHOLD_FEED_URL is not set.')
   process.exit(1)
 }
 
-// Refresh the long-lived token (no-op if it is <24h old). Returns the new token or null.
-async function refreshToken(currentToken) {
-  const url = `https://graph.instagram.com/refresh_access_token?grant_type=ig_refresh_token&access_token=${currentToken}`
+async function fetchFeed(url) {
   const res = await fetch(url)
   if (!res.ok) {
-    // Surface as a GitHub Actions warning annotation so a persistent refresh failure
-    // is visible in the run status, rather than silently drifting toward expiry.
-    console.log(`::warning::Instagram token refresh failed (HTTP ${res.status}). Using the existing token; it will expire if this keeps failing — see docs/instagram-setup.md.`)
-    return null
-  }
-  const json = await res.json()
-  return json.access_token || null
-}
-
-async function fetchMedia(activeToken) {
-  const url = `https://graph.instagram.com/me/media?fields=${encodeURIComponent(FIELDS)}&limit=12&access_token=${activeToken}`
-  const res = await fetch(url)
-  if (!res.ok) {
-    // Cap the logged body so an unexpectedly large/echoing response can't flood the log.
+    // Cap the logged body so an unexpectedly large response can't flood the log.
     const body = (await res.text()).slice(0, 500)
-    throw new Error(`Media fetch failed: HTTP ${res.status} — ${body}`)
+    throw new Error(`Behold feed fetch failed: HTTP ${res.status} — ${body}`)
   }
   const json = await res.json()
-  return Array.isArray(json.data) ? json.data : []
+  return Array.isArray(json.posts) ? json.posts : []
 }
 
 async function downloadImage(imageUrl, destPath) {
@@ -60,45 +48,30 @@ async function pruneImages(keepFilenames) {
   }
 }
 
-// Hand the refreshed token back to the workflow so it can update the repo secret.
-async function persistRefreshedToken(newToken) {
-  if (newToken && process.env.GITHUB_OUTPUT) {
-    console.log(`::add-mask::${newToken}`)
-    await appendFile(process.env.GITHUB_OUTPUT, `token=${newToken}\n`)
-  }
-}
-
 async function main() {
   await mkdir(IMAGE_DIR, { recursive: true })
 
-  const newToken = await refreshToken(token)
-  const activeToken = newToken || token
+  const posts = await fetchFeed(feedUrl)
+  const latest = selectLatest(posts, 4)
 
-  const media = await fetchMedia(activeToken)
-  const latest = selectLatest(media, 4)
-
-  // Guard: never wipe a good feed if a fetch transiently returns no imageable posts.
-  // Keep the last-known-good data (and still persist the refreshed token).
+  // Guard: never wipe a good feed if the fetch transiently returns no imageable posts.
   if (latest.length === 0) {
-    console.log('::warning::No Instagram posts with a usable image were returned; keeping existing feed data.')
-    await persistRefreshedToken(newToken)
+    console.log('::warning::Behold feed returned no posts with a usable image; keeping existing feed data.')
     return
   }
 
   const items = []
   const keep = new Set(['.gitkeep'])
-  for (const m of latest) {
-    const filename = `${m.id}.jpg`
-    await downloadImage(pickImageUrl(m), join(IMAGE_DIR, filename))
+  for (const post of latest) {
+    const filename = `${post.id}.webp` // Behold serves optimized webp images
+    await downloadImage(pickImageUrl(post), join(IMAGE_DIR, filename))
     keep.add(filename)
-    items.push(transformMedia(m, `/instagram/${filename}`))
+    items.push(transformMedia(post, `/instagram/${filename}`))
   }
 
   await pruneImages(keep)
   await writeFile(DATA_FILE, JSON.stringify(items, null, 2) + '\n')
   console.log(`Wrote ${items.length} posts to src/data/instagram.json`)
-
-  await persistRefreshedToken(newToken)
 }
 
 main().catch(err => {

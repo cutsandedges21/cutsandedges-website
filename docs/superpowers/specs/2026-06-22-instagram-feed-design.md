@@ -1,7 +1,18 @@
 # Cuts & Edges — Instagram Feed Design Spec
 
 **Date:** 2026-06-22
-**Status:** Approved (design); ready for implementation planning
+**Status:** Implemented
+
+> **Revision 2026-06-22 — data source changed to Behold.so.** The owner could not create
+> a Meta developer account, so the official Instagram Graph API path (own Meta app +
+> long-lived token + refresh + PAT) was replaced with the free **Behold.so** JSON feed.
+> Behold runs the Meta app on its side; you connect Instagram through Behold and get a
+> public JSON feed URL (no token, no developer account) that still includes like/comment
+> counts. The architecture below is otherwise unchanged: a scheduled GitHub Action fetches
+> the feed, caches images into the repo, and commits `src/data/instagram.json`, which the
+> `InstagramStrip` component renders. Sections 4 and 9 reflect Behold; the token/refresh/PAT
+> machinery in the original Graph-API write-up no longer applies. Owner setup is in
+> `docs/instagram-setup.md`.
 
 ## 1. Overview
 
@@ -63,25 +74,25 @@ Approaches considered and rejected:
   images still expire, and a cron is still needed to refresh the token. More moving
   parts, no benefit here.
 
-## 4. Instagram API Details (verified 2026-06)
+## 4. Data Source — Behold.so JSON feed (verified 2026-06)
 
-- **API:** "Instagram API with Instagram Login" (successor to the shut-down Basic
-  Display API). Host: `graph.instagram.com`.
+- **Why Behold:** the owner could not create a Meta developer account. Behold runs the
+  Meta app on its side, so connecting Instagram needs no developer account and the feed
+  needs **no token** (the feed URL is public and safe to expose).
 - **Account:** must be Business or Creator (✓ `@cutsandedges21` is Business).
-- **App review:** **not required** for reading your *own* account ("Standard Access").
-- **Media fetch:**
-  `GET https://graph.instagram.com/me/media?fields=id,caption,media_type,media_product_type,media_url,thumbnail_url,permalink,timestamp,like_count,comments_count,children{media_url,media_type,thumbnail_url}&access_token=…`
-  (`children{…}` is required so carousel albums expose a usable image, since a
-  `CAROUSEL_ALBUM`'s top-level `media_url` can be null.)
-- **Media types:** photos use `media_url`; **reels/videos** return `media_type=VIDEO`
-  (with `media_product_type=REELS`) and use `thumbnail_url` for the cover image;
-  carousels use the first child's image.
-- **Token lifecycle:** short-lived (1h) → long-lived (60 days) → refreshed via
-  `GET https://graph.instagram.com/refresh_access_token?grant_type=ig_refresh_token&access_token=…`.
-  Refresh returns a **new** token value with a fresh 60-day expiry (old token stays
-  valid until its original expiry), so the new value **must be persisted** for the next
-  run.
-- **Rate limit:** 200 requests/hour/account — we use ~2/day.
+- **Free plan:** up to 6 posts (we use 4), daily refresh, includes like/comment counts.
+  There is a monthly *view* cap — mitigated by fetching server-side and caching images
+  into the repo, so visitor traffic never hits Behold.
+- **Feed fetch:** `GET <BEHOLD_FEED_URL>` → JSON `{ ..., posts: [...] }`.
+- **Post fields used:** `id`, `mediaType` (`IMAGE`|`VIDEO`|`CAROUSEL_ALBUM`), `permalink`,
+  `caption` / `prunedCaption` (hashtags removed — preferred for display), `likeCount`,
+  `commentsCount`, `timestamp`, and `sizes` (`small`/`medium`/`large`/`full`, each with
+  `mediaUrl`). Carousels also carry a `children` array.
+- **Image selection:** use `sizes` (prefer `large` → `medium` → `full` → `small`);
+  carousels fall back to the first child. Behold serves optimized **webp** images, so
+  reels/videos already expose a usable cover image via `sizes` (no `thumbnail_url` needed).
+- **No token, no refresh, no PAT** — the `BEHOLD_FEED_URL` is stored as a non-secret repo
+  **variable**.
 
 ## 5. Components
 
@@ -163,36 +174,35 @@ Array of up to 4 objects:
 
 ## 8. Testing
 
-- **Unit (Vitest, `src/test/`):** `transform()` over a committed sample API-response
-  fixture — covers photo vs. reel vs. carousel, missing `like_count`, and caption
-  trimming. No network.
-- **Component:** `InstagramStrip` renders real tiles from sample data; renders
-  placeholders when data is empty.
-- **Manual:** run `fetch-instagram.mjs` locally once with a token to confirm output;
-  then trigger the workflow via "Run workflow" and confirm images land in
-  `public/instagram/` and the strip renders them live.
+- **Unit (Vitest, `src/test/`):** the pure helpers in `src/lib/instagram.js`
+  (`mediaType`, `pickImageUrl`, `trimCaption`, `transformMedia`, `selectLatest`,
+  `feedItems`) over Behold-shaped fixtures — covers image/video/carousel, missing
+  counts, caption trimming (incl. emoji boundaries), and the empty→fallback decision.
+  No network, no DOM. (The project has no React Testing Library, so component rendering
+  is verified via build, not a render test.)
+- **Manual:** run `fetch-instagram.mjs` locally once with `BEHOLD_FEED_URL` set to
+  confirm output; then trigger the workflow via "Run workflow" and confirm images land
+  in `public/instagram/` and the strip renders them live.
 
-## 9. One-Time Setup (owner-performed, ~20 min, free)
+## 9. One-Time Setup (owner-performed, ~10 min, free)
 
-Documented as a step-by-step checklist in the repo. Summary:
+Documented as a step-by-step checklist in `docs/instagram-setup.md`. Summary:
 1. Confirm `@cutsandedges21` is a Business/Creator account (✓).
-2. Create a free Meta developer account → new **Business** app → add **Instagram** →
-   "API setup with Instagram login."
-3. Generate a token; use a provided one-time command to exchange it into a 60-day
-   long-lived token and read the account user ID.
-4. Create a GitHub **fine-grained PAT** with "Secrets: write" permission.
-5. Add two GitHub repo secrets: `IG_ACCESS_TOKEN` (long-lived token) and
-   `IG_REFRESH_PAT` (the PAT).
+2. Sign up free at behold.so, connect Instagram, create a feed.
+3. Copy the feed's public JSON URL.
+4. Add it as a GitHub repo **variable** `BEHOLD_FEED_URL` (Settings → Secrets and
+   variables → Actions → Variables). No secrets needed.
+5. Run the workflow once via "Run workflow".
 
-After setup, the feed is self-maintaining: the weekly Action keeps the token alive and
-the posts current.
+After setup, the feed is self-maintaining: the weekly Action refreshes the posts. No
+token to keep alive.
 
 ## 10. Files Touched
 
 | File | Change |
 |---|---|
 | `scripts/fetch-instagram.mjs` | new — fetch/transform/cache/write |
-| `.github/workflows/instagram.yml` | new — scheduled fetch + token persist + commit |
+| `.github/workflows/instagram.yml` | new — scheduled Behold fetch + commit (no secrets) |
 | `src/data/instagram.json` | new — generated data (seeded with `[]`) |
 | `public/instagram/` | new — cached images (generated) |
 | `src/components/InstagramStrip.jsx` | edit — read data, `limit` prop, fallback |
