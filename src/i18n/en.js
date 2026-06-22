@@ -35,5 +35,5 @@ export default {
     directTitle: 'Prefer to reach us directly?',
     sizes: { small: 'Small (under 1,500 sq ft)', medium: 'Medium (1,500–2,000 sq ft)', large: 'Large (2,000+ sq ft)' },
   },
-  footer: { tagline: 'Professional lawn care that transforms your outdoor space with precision and care.', servicesH: 'Services', companyH: 'Company', contactH: 'Contact', rights: 'All rights reserved.', privacy: 'Privacy Policy', terms: 'Terms of Service' },
+  footer: { tagline: 'Professional lawn care that transforms your outdoor space with precision and care.', exploreH: 'Explore', contactH: 'Contact', rights: 'All rights reserved.', privacy: 'Privacy Policy', terms: 'Terms of Service' },
 }

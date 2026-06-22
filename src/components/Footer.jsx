@@ -17,12 +17,9 @@ export default function Footer() {
           </div>
         </div>
         <div>
-          <h3 className="footer__h">{t.footer.servicesH}</h3>
+          <h3 className="footer__h">{t.footer.exploreH}</h3>
           <Link to="/services">{t.nav.services}</Link>
           <Link to="/gallery">{t.nav.gallery}</Link>
-        </div>
-        <div>
-          <h3 className="footer__h">{t.footer.companyH}</h3>
           <Link to="/about">{t.nav.about}</Link>
           <Link to="/contact">{t.nav.contact}</Link>
         </div>

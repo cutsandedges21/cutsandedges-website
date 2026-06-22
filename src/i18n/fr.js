@@ -35,5 +35,5 @@ export default {
     directTitle: 'Préférez-vous nous joindre directement?',
     sizes: { small: 'Petit (moins de 1 500 pi²)', medium: 'Moyen (1 500–2 000 pi²)', large: 'Grand (2 000+ pi²)' },
   },
-  footer: { tagline: 'Entretien de pelouse professionnel qui transforme votre espace extérieur avec précision et soin.', servicesH: 'Services', companyH: 'Entreprise', contactH: 'Contact', rights: 'Tous droits réservés.', privacy: 'Politique de confidentialité', terms: 'Conditions d’utilisation' },
+  footer: { tagline: 'Entretien de pelouse professionnel qui transforme votre espace extérieur avec précision et soin.', exploreH: 'Explorer', contactH: 'Contact', rights: 'Tous droits réservés.', privacy: 'Politique de confidentialité', terms: 'Conditions d’utilisation' },
 }
