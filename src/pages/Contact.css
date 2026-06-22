@@ -1,10 +1,10 @@
 .contact-grid { display: grid; grid-template-columns: 1.5fr 1fr; gap: clamp(2rem, 5vw, 4rem); align-items: start; }
 
-.quote-form label, .calc label { display: block; font-size: var(--label); letter-spacing: .08em; text-transform: uppercase; margin-bottom: 1rem; }
-.quote-form input, .quote-form select, .quote-form textarea, .calc input {
+.quote-form label { display: block; font-size: var(--label); letter-spacing: .08em; text-transform: uppercase; margin-bottom: 1rem; }
+.quote-form input, .quote-form select, .quote-form textarea {
   display: block; width: 100%; margin-top: .45rem; padding: .8rem; border: 1px solid var(--wheat);
   border-radius: 8px; background: #fff; font: inherit; text-transform: none; letter-spacing: normal; color: var(--ink); }
-.quote-form input:focus, .quote-form select:focus, .quote-form textarea:focus, .calc input:focus {
+.quote-form input:focus, .quote-form select:focus, .quote-form textarea:focus {
   outline: none; border-color: var(--forest); }
 .quote-form [aria-invalid="true"] { border-color: #b4502f; }
 .quote-form__grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem 1.5rem; }
@@ -13,13 +13,6 @@
 .quote-form .checkbox { display: flex; align-items: center; gap: .6rem; text-transform: none; letter-spacing: normal; font-size: .95rem; margin-bottom: .5rem; }
 .quote-form .checkbox input { display: inline-block; width: auto; margin: 0; }
 .quote-form__submit { margin-top: .5rem; }
-
-.calc { background: var(--wheat); border-radius: var(--radius); padding: 1.6rem; margin-bottom: 2rem; }
-.calc__title { font-size: 1.4rem; }
-.calc__help { font-size: .9rem; opacity: .75; margin: .4rem 0 1rem; }
-.calc__row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
-.calc__btn { margin-top: 1rem; }
-.calc__result { margin-top: 1rem; font-size: .95rem; }
 
 .contact-direct__title { font-size: 1.4rem; margin-bottom: 1rem; }
 .contact-direct a, .contact-direct__area { display: block; margin-bottom: .55rem; }

@@ -1,14 +1,11 @@
-import { useState } from 'react'
 import { useLang } from '../i18n/LanguageContext.jsx'
 import { CONTACT } from '../i18n/content.js'
 import Hero from '../components/Hero.jsx'
 import QuoteForm from '../components/QuoteForm.jsx'
-import LawnCalculator from '../components/LawnCalculator.jsx'
 import './Contact.css'
 
 export default function Contact() {
   const { t } = useLang()
-  const [size, setSize] = useState(null)
   return (
     <>
       <Hero
@@ -20,9 +17,8 @@ export default function Contact() {
       </section>
 
       <section className="section container contact-grid">
-        <QuoteForm prefillSize={size} />
+        <QuoteForm />
         <aside className="contact-aside">
-          <LawnCalculator onResult={setSize} />
           <div className="contact-direct">
             <h3 className="contact-direct__title">{t.contact.directTitle}</h3>
             <a href={CONTACT.phoneHref}>{CONTACT.phone}</a>
