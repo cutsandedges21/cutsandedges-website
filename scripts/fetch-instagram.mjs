@@ -32,11 +32,18 @@ async function fetchFeed(url) {
   return Array.isArray(json.posts) ? json.posts : []
 }
 
-async function downloadImage(imageUrl, destPath) {
+const EXT_BY_TYPE = { 'image/jpeg': 'jpg', 'image/png': 'png', 'image/webp': 'webp', 'image/gif': 'gif' }
+
+// Download an image and save it as <id>.<ext>, picking the extension from the response
+// content-type (Behold may serve jpg or webp). Returns the filename written.
+async function downloadImage(imageUrl, id) {
   const res = await fetch(imageUrl)
   if (!res.ok) throw new Error(`Image download failed: HTTP ${res.status}`)
+  const type = (res.headers.get('content-type') || '').split(';')[0].trim()
+  const filename = `${id}.${EXT_BY_TYPE[type] || 'jpg'}`
   const buf = Buffer.from(await res.arrayBuffer())
-  await writeFile(destPath, buf)
+  await writeFile(join(IMAGE_DIR, filename), buf)
+  return filename
 }
 
 // Remove cached images that are no longer part of the current feed (keep .gitkeep).
@@ -63,8 +70,7 @@ async function main() {
   const items = []
   const keep = new Set(['.gitkeep'])
   for (const post of latest) {
-    const filename = `${post.id}.webp` // Behold serves optimized webp images
-    await downloadImage(pickImageUrl(post), join(IMAGE_DIR, filename))
+    const filename = await downloadImage(pickImageUrl(post), post.id)
     keep.add(filename)
     items.push(transformMedia(post, `/instagram/${filename}`))
   }
