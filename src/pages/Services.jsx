@@ -20,7 +20,9 @@ export default function Services() {
 
       {SERVICES.map((s, i) => (
         <section key={s.id} className={`section container service-row ${i % 2 ? 'service-row--alt' : ''}`}>
-          <Reveal className="service-row__media" />
+          <Reveal className="service-row__media">
+            <img src={s.photo} alt={s[lang].name} loading="lazy" />
+          </Reveal>
           <Reveal className="service-row__body">
             <SectionLabel index={String(i + 1).padStart(2, '0')}>{t.nav.services}</SectionLabel>
             <h2>{s[lang].name}</h2>

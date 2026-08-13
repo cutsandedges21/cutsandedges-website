@@ -14,7 +14,13 @@ export default {
     intro: 'From routine maintenance to complete transformations. We charge per cut, with pricing based on your lawn size.',
     cta: 'Request a quote',
   },
-  gallery: { title: 'Our Work', intro: 'Quality you can see in every property we care for — precise, consistent, and finished with pride.', instaTitle: 'Follow along', cta: 'Get a quote' },
+  gallery: {
+    title: 'Our Work', intro: 'Quality you can see in every property we care for — precise, consistent, and finished with pride.',
+    baTitle: 'Before & After', baLead: 'Real properties, shot before we started and after we finished.',
+    before: 'Before', after: 'After',
+    detailTitle: 'On the Job', detailLead: 'Every cut done by hand, one pass at a time.',
+    instaTitle: 'Follow along', cta: 'Get a quote',
+  },
   about: {
     title: 'Excellence in Every Cut',
     p1: 'Since 2021, Cuts & Edges has been providing professional lawn care services with a focus on quality and customer satisfaction. We’ve grown to serve our local communities with dedication and precision.',

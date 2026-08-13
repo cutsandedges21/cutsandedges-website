@@ -14,7 +14,13 @@ export default {
     intro: 'De l’entretien régulier aux transformations complètes. Nous facturons par coupe, selon la taille de votre terrain.',
     cta: 'Demander une soumission',
   },
-  gallery: { title: 'Nos réalisations', intro: 'Une qualité visible sur chaque terrain que nous entretenons — précise, constante et soignée avec fierté.', instaTitle: 'Suivez-nous', cta: 'Obtenir une soumission' },
+  gallery: {
+    title: 'Nos réalisations', intro: 'Une qualité visible sur chaque terrain que nous entretenons — précise, constante et soignée avec fierté.',
+    baTitle: 'Avant et après', baLead: 'De vrais terrains, photographiés avant notre arrivée et après notre passage.',
+    before: 'Avant', after: 'Après',
+    detailTitle: 'Sur le terrain', detailLead: 'Chaque coupe faite à la main, une passe à la fois.',
+    instaTitle: 'Suivez-nous', cta: 'Obtenir une soumission',
+  },
   about: {
     title: 'L’excellence à chaque coupe',
     p1: 'Depuis 2021, Cuts & Edges offre des services professionnels d’entretien de pelouse axés sur la qualité et la satisfaction de la clientèle. Nous avons grandi pour servir nos communautés avec dévouement et précision.',

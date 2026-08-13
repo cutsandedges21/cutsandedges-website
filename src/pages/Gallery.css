@@ -4,6 +4,26 @@
 .gallery-clip--feature video { aspect-ratio: 21 / 9; }
 .gallery-clip__label { display: block; margin-top: .7rem; color: var(--gold); }
 
+.gallery-h2 { margin: 1rem 0 2.5rem; max-width: 22ch; }
+
+/* ── before & after ── */
+.ba-list { display: grid; gap: clamp(2.5rem, 6vw, 5rem); }
+.ba-pair { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(.8rem, 2vw, 1.5rem); }
+.ba-shot { margin: 0; position: relative; }
+.ba-shot img { width: 100%; aspect-ratio: var(--ba-ratio, 4 / 3); object-fit: cover;
+  border-radius: var(--radius); background: var(--wheat); }
+.ba-shot__tag { position: absolute; top: 1rem; left: 1rem;
+  font-size: var(--label); letter-spacing: .2em; text-transform: uppercase;
+  padding: .45rem .9rem; border-radius: 999px; background: rgba(34, 40, 31, .72); color: var(--cream); }
+.ba-shot__tag--after { background: var(--gold); color: var(--ink); font-weight: 600; }
+.ba-job__caption { margin-top: 1rem; font-family: var(--serif); font-size: clamp(1.15rem, 2.2vw, 1.5rem); max-width: 46ch; }
+
+/* ── mid-job shots ── */
+.job-details { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(1rem, 3vw, 2rem); }
+.job-detail { margin: 0; }
+.job-detail img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: var(--radius); background: var(--cream); }
+.job-detail figcaption { margin-top: .8rem; color: var(--forest); font-size: .95rem; }
+
 .gallery-insta-h { margin: 1rem 0 1.5rem; }
 .gallery-social-links { display: flex; gap: 1.5rem; margin-top: 1.5rem; }
 .gallery-cta { text-align: center; }
@@ -11,4 +31,7 @@
 @media (max-width: 640px) {
   .gallery-grid { grid-template-columns: 1fr; }
   .gallery-clip video, .gallery-clip--feature video { aspect-ratio: 16 / 9; }
+  /* keep before and after side by side on phones — the comparison is the point */
+  .ba-shot__tag { top: .5rem; left: .5rem; padding: .35rem .7rem; letter-spacing: .12em; }
+  .job-details { grid-template-columns: 1fr; }
 }

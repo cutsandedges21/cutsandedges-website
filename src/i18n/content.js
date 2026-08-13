@@ -8,16 +8,40 @@ export const CONTACT = {
   region: 'Greater Montreal, QC',
 }
 
+// `photo` — real job photography (optimized from Media/ into /public/images).
 export const SERVICES = [
-  { id: 'mowing',
+  { id: 'mowing', photo: '/images/detail-1.jpg',
     en: { name: 'Lawn Mowing & Maintenance', desc: 'Regular mowing, edging, and trimming to keep your lawn pristine week after week.', items: ['Weekly or bi-weekly service', 'Precision edging', 'Debris cleanup'] },
     fr: { name: 'Tonte et entretien', desc: 'Tonte, bordures et taille régulières pour une pelouse impeccable semaine après semaine.', items: ['Service hebdomadaire ou aux deux semaines', 'Bordures de précision', 'Nettoyage des débris'] } },
-  { id: 'seasonal',
+  { id: 'seasonal', photo: '/images/work-3-after.jpg',
     en: { name: 'Seasonal Services', desc: 'Keep your lawn healthy year-round with cleanup and seasonal care.', items: ['Spring/fall cleanup', 'Leaf removal', 'Debris clearing'] },
     fr: { name: 'Services saisonniers', desc: 'Gardez votre pelouse en santé toute l’année avec le nettoyage saisonnier.', items: ['Nettoyage printemps/automne', 'Ramassage des feuilles', 'Dégagement des débris'] } },
-  { id: 'weeds',
+  { id: 'weeds', photo: '/images/work-2-after.jpg',
     en: { name: 'Weed Removal', desc: 'Weed control to maintain a clean, healthy lawn without unwanted growth.', items: ['Manual weed removal', 'Regular maintenance', 'Garden bed weeding'] },
     fr: { name: 'Désherbage', desc: 'Contrôle des mauvaises herbes pour une pelouse propre et saine.', items: ['Désherbage manuel', 'Entretien régulier', 'Désherbage des plates-bandes'] } },
+]
+
+// Real jobs, shot before we started and after we finished. `ratio` matches the
+// source framing so each pair keeps its natural crop.
+export const BEFORE_AFTER = [
+  { id: 'backyard', ratio: '4 / 3',
+    before: '/images/work-1-before.jpg', after: '/images/work-1-after.jpg',
+    en: 'Overgrown backyard brought back to an even, striped cut',
+    fr: 'Cour arrière envahie ramenée à une coupe uniforme et rayée' },
+  { id: 'walkway', ratio: '3 / 4',
+    before: '/images/work-2-before.jpg', after: '/images/work-2-after.jpg',
+    en: 'Side yard mowed and the paver walkway cleared of weeds and leaves',
+    fr: 'Cour latérale tondue et allée de pavés dégagée des mauvaises herbes et des feuilles' },
+  { id: 'frontlawn', ratio: '3 / 4',
+    before: '/images/work-3-before.jpg', after: '/images/work-3-after.jpg',
+    en: 'Shaggy front lawn cut clean, with the clippings bagged and hauled away',
+    fr: 'Pelouse avant hirsute coupée à ras, résidus ensachés et emportés' },
+]
+
+// Mid-job shots.
+export const JOB_DETAILS = [
+  { src: '/images/detail-1.jpg', en: 'Cutting the first pass through a backyard', fr: 'Première passe dans une cour arrière' },
+  { src: '/images/detail-2.jpg', en: 'Working a front lawn down to an even height', fr: 'Tonte d’une pelouse avant à hauteur uniforme' },
 ]
 
 export const TRUST = [
