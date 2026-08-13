@@ -9,24 +9,19 @@ npm install
 npm run dev        # local dev server
 npm run build      # production build → dist/
 npm run preview    # preview the production build
-npm test           # run unit tests (i18n parity, lawn calc, form validation)
+npm test           # run unit tests (i18n parity, Instagram feed)
 ```
 
 ## Pages
 
 `/` Home · `/services` · `/gallery` · `/about` · `/contact` · `/privacy` · `/terms`
 
-## Quote form (email delivery)
+## Quote requests
 
-The contact form has **no backend**. To receive submissions by email, create a free form
-endpoint (e.g. [Formspree](https://formspree.io)) and set it in a `.env` file:
-
-```
-VITE_FORM_ENDPOINT=https://formspree.io/f/your-form-id
-```
-
-If no endpoint is configured (or it fails), the form falls back to opening the visitor's
-email client addressed to `cutsandedges21@gmail.com`.
+The site collects **no visitor data** — there is no contact form and no backend. `/contact`
+is an information page: visitors reach out by phone, email, or Instagram (all sourced from
+`CONTACT` in `src/i18n/content.js`), and it tells them what to include so the quote is
+accurate.
 
 ## Content & translations
 
